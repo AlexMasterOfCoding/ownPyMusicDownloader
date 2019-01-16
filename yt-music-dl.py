@@ -15,8 +15,6 @@ import datetime
 import queue
 import sys
 
-base_path = "C:\\Users\\Alex\\Music"
-
 class MyLogger(object):
     def debug(self, msg):
         pass
@@ -148,4 +146,7 @@ def main():
             quit()
 
 if __name__ == "__main__":
+    base_path = "K:\\Musik"
+    if sys.argv[0]:
+        base_path = sys.argv[0]
     main()
