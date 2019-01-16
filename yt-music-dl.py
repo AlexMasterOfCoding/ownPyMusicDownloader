@@ -131,11 +131,11 @@ def main():
             q.join()
 
             # stop workers (afterwards)
+            print("Stopping workers...")
             for i in range(num_worker_threads):
-                print("Stopping workers...")
                 q.put(None)
+            print("Joining Threads...")
             for t in threads:
-                print("Joining Threads...")
                 t.join()
             print("Bye!")
             sys.exit()
