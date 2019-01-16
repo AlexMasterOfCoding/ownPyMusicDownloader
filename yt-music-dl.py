@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# # -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 import time
@@ -11,6 +14,8 @@ import datetime
 
 import queue
 import sys
+
+base_path = "C:\\Users\\Alex\\Music"
 
 class MyLogger(object):
     def debug(self, msg):
@@ -29,6 +34,8 @@ def my_hook(d):
         print('Done downloading, now converting ...')
     elif d['status'] == 'error':
         print('An error occured!')
+    else:
+        print('Unknown status:', d,  d['status'])
 
 now = datetime.datetime.now()
 actual_date = now.strftime("%Y_%m_%d")
@@ -41,7 +48,7 @@ ydl_opts = {
         'preferredcodec': 'mp3',
         'preferredquality': '192',
     }],
-    'outtmpl': "K:\Musik\Download\{}\%(title)s.%(ext)s".format(actual_date),
+    'outtmpl': "{}\Download\{}\%(title)s.%(ext)s".format(base_path, actual_date),
     'logger': MyLogger(),
     'progress_hooks': [my_hook],
     'noplaylist': True,
@@ -119,15 +126,26 @@ def main():
             print("Stopping Youtube-Clipboard listener and going to join threads ...")
             watcher.stop()
             # block until all tasks are done (only wait if user aborted clipboard listener!)
+            # Maybe blocking if error occurs?
+            print("Joining Queue...")
             q.join()
 
             # stop workers (afterwards)
             for i in range(num_worker_threads):
+                print("Stopping workers...")
                 q.put(None)
             for t in threads:
+                print("Joining Threads...")
                 t.join()
             print("Bye!")
             sys.exit()
+            quit()
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+            for t in threads:
+                t.join()
+            sys.exit()
+            quit()
 
 if __name__ == "__main__":
     main()
